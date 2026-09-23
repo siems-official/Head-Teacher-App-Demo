@@ -1,0 +1,59 @@
+{
+  "expo": {
+    "name": "Pathshala Head Teacher App",
+    "scheme": "paathshala-head-teacher",
+    "slug": "paathshala-head-teacher",
+    "version": "1.0.6",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.smartpathshala.headteacher"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 35,
+            "targetSdkVersion": 35,
+            "buildToolsVersion": "35.0.0",
+            "usesCleartextTraffic": true,
+            "versionCode": 6,
+            "permissions": [
+              "android.permission.INTERNET",
+              "android.permission.ACCESS_NETWORK_STATE"
+            ]
+          }
+        }
+      ],
+      "expo-router"
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "3c43a1d0-845a-4b74-9192-4b3a70607576"
+      }
+    },
+    "owner": "hnative"
+  }
+}
