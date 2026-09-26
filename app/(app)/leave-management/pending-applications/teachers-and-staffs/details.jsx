@@ -42,9 +42,9 @@ const PendingApplicationsTeachersDetailsScreen = () => {
       .unwrap()
       .then((res) => {
         if (res?.success) {
-          if ((status = "approved")) {
+          if (status === "approved") {
             setSuccessDialogOpen(true);
-          } else if ((status = "rejected")) {
+          } else if (status === "rejected") {
             setConfirmationDialogOpen(true);
           }
         }

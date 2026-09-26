@@ -9,6 +9,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { Text, useWindowDimensions, View } from "react-native";
 import { useSelector } from "react-redux";
+import Toast from "react-native-simple-toast";
 
 const PendingApplicationsStudentsDetailsScreen = () => {
   const params = useLocalSearchParams();
@@ -41,9 +42,9 @@ const PendingApplicationsStudentsDetailsScreen = () => {
       .unwrap()
       .then((res) => {
         if (res?.success) {
-          if ((status = "approved")) {
+          if (status === "approved") {
             setSuccessDialogOpen(true);
-          } else if ((status = "rejected")) {
+          } else if (status === "rejected") {
             setConfirmationDialogOpen(true);
           }
         }
