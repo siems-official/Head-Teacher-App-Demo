@@ -48,7 +48,7 @@ const LoginScreen = () => {
         const savedCreds = await AsyncStorage.getItem("login_credentials");
         const remember = JSON.parse(value);
 
-        setRememberMe(remember);
+        setRememberMe(remember === true);
 
         if (remember && savedCreds) {
           const { instituteId, userCode, password } = JSON.parse(savedCreds);
@@ -124,9 +124,17 @@ const LoginScreen = () => {
           }
         })
         .catch((err) => {
-          Toast.show(err.data.message, Toast.BOTTOM, Toast.LONG, {
-            backgroundColor: colors.statusError,
-          });
+          Toast.show(
+            err?.data?.message ||
+              err?.error ||
+              err?.message ||
+              "Network error. Please try again.",
+            Toast.BOTTOM,
+            Toast.LONG,
+            {
+              backgroundColor: colors.statusError,
+            }
+          );
         });
     } else {
       console.log("Error:", errors);
