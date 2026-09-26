@@ -83,21 +83,34 @@ const leaveManagementApi = apiSlice.injectEndpoints({
         };
       },
 
-      async onQueryStarted(_args, { queryFulfilled, dispatch }) {
-        try {
+      async onQueryStarted(_args, { queryFulfilled, dispatch, getState }) {
           const { leave_id, type } = _args;
+          let snapshot = [];
 
           if (type === "student") {
+            snapshot =
+              getState().leaveManagement.pendingStudentApplications.data;
             dispatch(removeStudentApplicationFromPendingList({ id: leave_id }));
           } else if (type === "teacher") {
+            snapshot =
+              getState().leaveManagement.pendingTeacherStuffApplications.data;
             dispatch(
               removeTeacherStuffApplicationFromPendingList({ id: leave_id })
             );
           }
-        } catch (err) {
-          console.error(err);
-        }
-      },
+
+          try {
+            await queryFulfilled;
+          } catch (err) {
+            // ROLLBACK: restore the pending list on failure
+            if (type === "student") {
+              dispatch(setPendingStudentApplications(snapshot));
+            } else if (type === "teacher") {
+              dispatch(setPendingTeacherStuffApplications(snapshot));
+            }
+            if (__DEV__) console.error(err);
+          }
+        },
     }),
   }),
 });

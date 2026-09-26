@@ -16,10 +16,11 @@ const useAuthCheck = () => {
 
       if (localAuth) {
         const auth = JSON.parse(localAuth);
-        const expireTime = jwtDecode(auth?.token).exp;
-        const checkExpire = expireTime > currentTimestamp;
 
         if (auth?.token) {
+          const expireTime = jwtDecode(auth.token).exp;
+          const checkExpire = expireTime > currentTimestamp;
+
           if (checkExpire) dispatch(setCredentials(auth));
           else {
             await AsyncStorage.removeItem("auth");
@@ -31,6 +32,9 @@ const useAuthCheck = () => {
         }
       }
     } catch (error) {
+      await AsyncStorage.removeItem("auth");
+      dispatch(logout());
+      if (__DEV__) console.warn("Auth check failed, cleared stored auth", error);
     } finally {
       setAuthChecked(true);
     }
@@ -40,6 +44,7 @@ const useAuthCheck = () => {
       // just a custom delay for splash screen
       checkAuth();
     }, 2000);
+    return () => clearTimeout(checkAuthTimeout);
   }, []);
   return authChecked;
 };

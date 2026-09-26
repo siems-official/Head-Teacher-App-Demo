@@ -29,8 +29,8 @@ const studentSlice = createSlice({
       state.filterCategory = action.payload;
     },
     setStudents: (state, action) => {
-      state.allStudents = action.payload;
-      state.studentList = action.payload?.map((item) => ({
+      state.allStudents = Array.isArray(action.payload) ? action.payload : [];
+      state.studentList = state.allStudents.map((item) => ({
         _id: item?._id,
         class: item?.current_class?.local_class_name,
         roll: item?.current_roll_number,
@@ -55,7 +55,7 @@ const studentSlice = createSlice({
           email: item?.email,
         }));
       } else {
-        state.studentList = state.studentList.filter((item) =>
+        state.studentList = (state.studentList ?? []).filter((item) =>
           item.roll?.toString().startsWith(action.payload)
         );
       }

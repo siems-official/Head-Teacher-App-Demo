@@ -39,30 +39,6 @@ const attendanceListScreen = () => {
   // UNIQUE KEY
   const uniqueKey = `${class_id}-${section_id}-${period_id}-${subject_id}`;
 
-  // GET ENROLL LIST
-  const {
-    isUninitialized: isUninitializedEnrollList,
-    isLoading: isLoadingEnrollList,
-    isFetching: isFetchingEnrollList,
-    isSuccess: enrollmentFetchSuccess,
-    isError: isErrorLoadingEnrollList,
-    refetch: refetchEnrollList,
-  } = useGetEnrollListQuery(
-    {
-      institute_id: user?.teacher?.institute_id,
-      subject_id: subject_id,
-      teacher_id: user?.teacher?._id,
-      class_id: class_id,
-      section_id: section_id,
-      period_id: period_id,
-      group_id: group_id,
-    },
-    {
-      // refetchOnMountOrArgChange: true,
-      skip: attendanceExistance,
-    }
-  );
-
   // CHECK ATTENDANCE EXISTANCE
   const {
     isUninitialized: isUninitializedExistance,
@@ -84,8 +60,31 @@ const attendanceListScreen = () => {
       academic_year: selectedYear?.global_academic_year,
     },
     {
-      skip: !enrollmentFetchSuccess, // Only run after enrollment succeeds,
       refetchOnMountOrArgChange: true,
+    }
+  );
+
+  // GET ENROLL LIST
+  const {
+    isUninitialized: isUninitializedEnrollList,
+    isLoading: isLoadingEnrollList,
+    isFetching: isFetchingEnrollList,
+    isSuccess: enrollmentFetchSuccess,
+    isError: isErrorLoadingEnrollList,
+    refetch: refetchEnrollList,
+  } = useGetEnrollListQuery(
+    {
+      institute_id: user?.teacher?.institute_id,
+      subject_id: subject_id,
+      teacher_id: user?.teacher?._id,
+      class_id: class_id,
+      section_id: section_id,
+      period_id: period_id,
+      group_id: group_id,
+    },
+    {
+      // refetchOnMountOrArgChange: true,
+      skip: attendanceExistance?.data?.isExists,
     }
   );
 
