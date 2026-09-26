@@ -81,11 +81,12 @@ const studentAttendanceSlice = createSlice({
 
       // Step 1: Tally present/absent for each student
       action.payload?.forEach((student) => {
+        const studentId = student?.student_id?._id;
         const roll = student?.student_id?.current_roll_number;
         const status = student?.attendance_status;
 
-        if (!attendancePresentAbsentMap[roll]) {
-          attendancePresentAbsentMap[roll] = {
+        if (!attendancePresentAbsentMap[studentId]) {
+          attendancePresentAbsentMap[studentId] = {
             _id: student?._id,
             name: student?.student_id?.name_english,
             roll,
@@ -98,18 +99,18 @@ const studentAttendanceSlice = createSlice({
         }
 
         if (status === "present") {
-          attendancePresentAbsentMap[roll].totalPresent += 1;
+          attendancePresentAbsentMap[studentId].totalPresent += 1;
         } else if (status === "absent") {
-          attendancePresentAbsentMap[roll].totalAbsent += 1;
+          attendancePresentAbsentMap[studentId].totalAbsent += 1;
         }
-        attendancePresentAbsentMap[roll].totalClass += 1;
+        attendancePresentAbsentMap[studentId].totalClass += 1;
       });
 
       // Step 2: Build presentStudentList with stats, only for students who were present today
       state.presentStudentList = action.payload?.reduce((acc, student) => {
         if (student?.attendance_status === "present") {
           const roll = student?.student_id?.current_roll_number;
-          const stats = attendancePresentAbsentMap[roll];
+          const stats = attendancePresentAbsentMap[student?.student_id?._id];
 
           acc.push({
             _id: student?._id,
@@ -134,7 +135,7 @@ const studentAttendanceSlice = createSlice({
       state.absentStudentList = action.payload?.reduce((acc, student) => {
         if (student?.attendance_status === "absent") {
           const roll = student?.student_id?.current_roll_number;
-          const stats = attendancePresentAbsentMap[roll];
+          const stats = attendancePresentAbsentMap[student?.student_id?._id];
 
           acc.push({
             _id: student?._id,
@@ -160,10 +161,11 @@ const studentAttendanceSlice = createSlice({
       const studentAttendanceMap = {};
 
       action.payload?.forEach((student) => {
+        const studentId = student?.student_id?._id;
         const roll = student?.student_id?.current_roll_number;
 
-        if (!studentAttendanceMap[roll]) {
-          studentAttendanceMap[roll] = {
+        if (!studentAttendanceMap[studentId]) {
+          studentAttendanceMap[studentId] = {
             _id: student?._id,
             name: student?.student_id?.name_english,
             roll: roll,
@@ -179,16 +181,16 @@ const studentAttendanceSlice = createSlice({
         }
 
         // else {
-        //   studentAttendanceMap[roll].absent += 1; // if already exists, add 1
+        //   studentAttendanceMap[studentId].absent += 1; // if already exists, add 1
         // }
 
         if (student?.attendance_status === "absent") {
-          studentAttendanceMap[roll].absent += 1;
+          studentAttendanceMap[studentId].absent += 1;
         } else if (student?.attendance_status === "present") {
-          studentAttendanceMap[roll].present += 1;
+          studentAttendanceMap[studentId].present += 1;
         }
 
-        studentAttendanceMap[roll].totalClass += 1;
+        studentAttendanceMap[studentId].totalClass += 1;
       });
 
       state.absentHistory = Object.values(studentAttendanceMap);
@@ -198,10 +200,11 @@ const studentAttendanceSlice = createSlice({
       const studentAttendanceMap = {};
 
       action.payload?.forEach((student) => {
+        const studentId = student?.student_id?._id;
         const roll = student?.student_id?.current_roll_number;
 
-        if (!studentAttendanceMap[roll]) {
-          studentAttendanceMap[roll] = {
+        if (!studentAttendanceMap[studentId]) {
+          studentAttendanceMap[studentId] = {
             _id: student?._id,
             name: student?.student_id?.name_english,
             roll,
@@ -216,16 +219,16 @@ const studentAttendanceSlice = createSlice({
           };
         }
         // else {
-        //   studentAttendanceMap[roll].absent += 1; // if already exists, add 1
+        //   studentAttendanceMap[studentId].absent += 1; // if already exists, add 1
         // }
 
         if (student?.attendance_status === "absent") {
-          studentAttendanceMap[roll].absent += 1;
+          studentAttendanceMap[studentId].absent += 1;
         } else if (student?.attendance_status === "present") {
-          studentAttendanceMap[roll].present += 1;
+          studentAttendanceMap[studentId].present += 1;
         }
 
-        studentAttendanceMap[roll].totalClass += 1;
+        studentAttendanceMap[studentId].totalClass += 1;
       });
 
       state.monthlyAbsentList = Object.values(studentAttendanceMap);

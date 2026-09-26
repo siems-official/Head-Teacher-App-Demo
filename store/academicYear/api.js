@@ -46,11 +46,12 @@ export const academicYearApi = apiSlice.injectEndpoints({
           // set selected year from async storage if available
           const selectedYearJSON = await AsyncStorage.getItem("selectedYear");
           const selectedYear = JSON.parse(selectedYearJSON);
+          const { academicYearList } = getState().academicYear;
           if (selectedYear) {
             dispatch(setSelectedYear(selectedYear));
           } else {
-            dispatch(setSelectedYear(instituteBasedAcademicYears.data?.[0]));
-            dispatch(setInvoiceYear(instituteBasedAcademicYears.data?.[0]));
+            dispatch(setSelectedYear(academicYearList?.[0]));
+            dispatch(setInvoiceYear(academicYearList?.[0]));
           }
 
           return {

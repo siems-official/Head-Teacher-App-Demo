@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import AttendanceMapperTable from "@/components/attendance/AttendanceMapperTable";
 import AttendanceSummaryTable from "@/components/attendance/AttendanceSummaryTable";
 import Button from "@/components/ui/Button";
@@ -84,9 +85,16 @@ const attendanceListScreen = () => {
     },
     {
       // refetchOnMountOrArgChange: true,
-      skip: attendanceExistance?.data?.isExists,
     }
   );
+
+  // RE-APPLY SAVED ATTENDANCE STATUSES ONCE THE ROSTER IS LOADED
+  useEffect(() => {
+    if (enrollmentFetchSuccess && attendanceExistance?.data?.isExists) {
+      refetchExistance();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enrollmentFetchSuccess]);
 
   // ATTENDANCE BULK ADD
   const [attendanceBulkAdd, { isLoading: isBulkAttendanceAdding }] =
@@ -162,11 +170,13 @@ const attendanceListScreen = () => {
   // console.log(attendanceExistance?.data?.isExists);
 
   const handleBulkUpdate = async () => {
-    const data = attendanceList?.[uniqueKey]?.map((student) => ({
-      _id: student?.attendanceId,
-      institute_id: user?.teacher?.institute_id,
-      attendance_status: student?.attendanceStatus,
-    }));
+    const data = attendanceList?.[uniqueKey]
+      ?.filter((student) => student?.attendanceId)
+      .map((student) => ({
+        _id: student?.attendanceId,
+        institute_id: user?.teacher?.institute_id,
+        attendance_status: student?.attendanceStatus,
+      }));
 
     attendanceBulkUpdate(data)
       .unwrap()

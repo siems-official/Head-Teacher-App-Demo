@@ -10,7 +10,7 @@ const academicYearSlice = createSlice({
   initialState,
   reducers: {
     setAcademicYearList: (state, action) => {
-      state.academicYearList = action.payload?.sort((a, b) => {
+      state.academicYearList = [...(action.payload ?? [])].sort((a, b) => {
         const getYear = (yearStr) => {
           const match = yearStr.match(/\d{4}/); // grabs first 4-digit year
           return match ? parseInt(match[0]) : 0;

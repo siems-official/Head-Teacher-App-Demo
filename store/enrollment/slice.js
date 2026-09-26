@@ -41,14 +41,18 @@ const enrollmentSlice = createSlice({
 
       const uniqueKey = `${class_id}-${section_id}-${subject_id}`;
 
-      state.studentEnrollableList?.[uniqueKey]?.push({
+      if (!state.studentEnrollableList[uniqueKey]) {
+        state.studentEnrollableList[uniqueKey] = [];
+      }
+      state.studentEnrollableList[uniqueKey].push({
         ...student,
         _id: student?._id,
         name: student?.name_english,
         roll: student?.current_roll_number || "N/A",
         enrollStatus: true,
       });
-      state.enrollCount[uniqueKey] = state.enrollCount?.[uniqueKey] + 1;
+      state.enrollCount[uniqueKey] =
+        state.studentEnrollableList[uniqueKey].length;
     },
 
     // REMOVE SINGLE ENROLL
@@ -59,8 +63,9 @@ const enrollmentSlice = createSlice({
 
       state.studentEnrollableList[uniqueKey] = state.studentEnrollableList?.[
         uniqueKey
-      ]?.filter((student) => id !== student?._id);
-      state.enrollCount[uniqueKey] = state.enrollCount?.[uniqueKey] - 1;
+      ]?.filter((student) => id !== student?._id) || [];
+      state.enrollCount[uniqueKey] =
+        state.studentEnrollableList[uniqueKey].length;
     },
 
     // UPDATE SINGLE ENROLL

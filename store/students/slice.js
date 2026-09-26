@@ -55,9 +55,19 @@ const studentSlice = createSlice({
           email: item?.email,
         }));
       } else {
-        state.studentList = (state.studentList ?? []).filter((item) =>
-          item.roll?.toString().startsWith(action.payload)
-        );
+        state.studentList = state.allStudents
+          .filter((item) =>
+            item.current_roll_number?.toString().startsWith(action.payload)
+          )
+          .map((item) => ({
+            _id: item?._id,
+            class: item?.current_class?.local_class_name,
+            roll: item?.current_roll_number,
+            name: item?.name_english,
+            image: item?.image,
+            phone: item?.mobile_number,
+            email: item?.email,
+          }));
       }
     },
   },
