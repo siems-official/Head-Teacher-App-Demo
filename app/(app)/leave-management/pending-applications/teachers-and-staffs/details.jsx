@@ -50,9 +50,17 @@ const PendingApplicationsTeachersDetailsScreen = () => {
         }
       })
       .catch((err) => {
-        Toast.show(err?.data?.message, Toast.BOTTOM, Toast.LONG, {
-          backgroundColor: colors.statusError,
-        });
+        Toast.show(
+          err?.data?.message ||
+            err?.error ||
+            err?.message ||
+            "Network error. Please try again.",
+          Toast.BOTTOM,
+          Toast.LONG,
+          {
+            backgroundColor: colors.statusError,
+          }
+        );
       });
   };
 
